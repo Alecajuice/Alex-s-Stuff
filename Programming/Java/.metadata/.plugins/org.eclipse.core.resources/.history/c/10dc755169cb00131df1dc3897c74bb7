@@ -1,0 +1,80 @@
+package components.tiles;
+
+import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
+
+import javax.swing.*;
+
+public class TileToolTip extends JToolTip
+{
+	private JLabel m_label;
+    private JButton m_button;
+    private JPanel m_panel;
+    
+    public TileToolTip() {
+    	super();
+    	setOpaque(false);
+//        m_label = new JLabel();
+//        m_button = new JButton("See, I am a button!");
+//        m_panel = new JPanel(new BorderLayout());
+//        m_panel.add(BorderLayout.CENTER, m_label);
+//        m_panel.add(BorderLayout.SOUTH, m_button);
+//        setLayout(new BorderLayout());
+//        add(m_panel);
+    }
+
+    public Dimension getPreferredSize( ) {
+		Dimension dim = super.getPreferredSize( );
+		return new Dimension((int)dim.getWidth( )+20, (int)dim.getHeight( )+20);
+	}
+    
+    public void paintComponent(Graphics g) {
+    	Component parent = this.getParent( );
+    	if(parent != null)
+    	{
+    		if(parent instanceof JComponent)
+    		{
+    			JComponent jparent = (JComponent)parent;
+    			if(jparent.isOpaque( ))
+    			{
+    				jparent.setOpaque(false);
+    			}
+    		}
+    	 }
+    	// create a round rectangle
+    	Shape round = new RoundRectangle2D.Float(4,4,
+            this.getWidth( )-1-8,
+            this.getHeight( )-1-8,
+    		15,15);
+
+    	// draw the white background
+    	Graphics2D g2 = (Graphics2D)g;
+    	g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+    		RenderingHints.VALUE_ANTIALIAS_ON);
+    	g2.setColor(Color.darkGray);
+    	g2.fill(round);
+
+    	g2.setColor(Color.black);
+    	g2.setStroke(new BasicStroke(5));
+    	g2.draw(round);
+    	g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+    		RenderingHints.VALUE_ANTIALIAS_DEFAULT);
+
+    	// draw the text
+    	String text = this.getComponent( ).getToolTipText( );
+    	if(text != null) {
+               FontMetrics fm = g2.getFontMetrics( );
+               int h = fm.getAscent( );
+               g2.setColor(Color.black);
+    		   g2.drawString(text,10,(this.getHeight( )+h)/2);
+    		}
+    	}
+
+//    public void setTipText(String tipText) {
+//        if (tipText != null && !tipText.isEmpty()) {
+//            m_label.setText(tipText);
+//        } else {
+//            super.setTipText(tipText);
+//        }
+//    }
+}

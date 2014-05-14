@@ -1,0 +1,123 @@
+package gui;
+
+
+/*
+ * Main class: contains action listeners and display methods
+ */
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.io.IOException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import components.Grid;
+import components.Player;
+import components.tiles.Tile;
+
+public class Main extends JPanel implements KeyListener, MouseListener, MouseMotionListener
+{
+	private static final long serialVersionUID = 1L;
+	private static String gameName = "4XTBS";
+    private static Grid map;
+    public static Player player1 = new Player();
+    static int screenWidth = 1920;
+    static int screenHeight = 1080;
+    static JFrame frame = new JFrame();
+    public static void main(String[] args) throws IOException
+    {
+        player1.getCamera().setZoomRatio(0.2);
+        player1.getCamera().setulPosition(new Point(0, 0));
+        Tile.getTileSheet();
+        map = new Grid(5, 20, 20);
+        frame.setSize(screenWidth, screenHeight);
+        frame.setTitle(gameName);
+        frame.setLocationRelativeTo(null);
+        frame.setBackground(Color.WHITE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Main drawer = new Main();
+        frame.add(drawer);
+        frame.addKeyListener(drawer);
+        frame.addMouseListener(drawer);
+        frame.addMouseMotionListener(drawer);
+        for(int i = 0; i < 5; i++)
+        {
+        	map.smooth();
+        }
+        frame.setLayout(new FlowLayout());
+        JPanel test = new JPanel();
+        GridLayout gridLayout = new GridLayout(20, 20);
+        gridLayout.setHgap(-28);
+        gridLayout.setVgap(-14);
+        test.setLayout(gridLayout);
+        frame.add(test);
+        Tile[][] grid = map.getGrid();
+        for(int i = 0; i < grid.length; i++)
+        {
+            for(int j = 0; j < grid[0].length; j++)
+            {
+            	test.add(grid[i][j]);
+//            	map.add(new JButton("hi"));
+            }
+        }
+//        frame.setSize(map.getWidth()*Tile.modWidth, map.getHeight()*Tile.modHeight+20);
+        frame.setVisible(true);
+    }
+    public void paintComponent(Graphics screen)
+    {
+//        map.draw(screen);
+    }
+    //Mouse events
+    public void mouseDragged(MouseEvent arg0) 
+    {
+        
+    }
+    public void mouseMoved(MouseEvent arg0) 
+    {
+        
+    }
+    public void mouseClicked(MouseEvent arg0) 
+    {
+        
+    }
+    public void mouseEntered(MouseEvent arg0) 
+    {
+        
+    }
+    public void mouseExited(MouseEvent arg0) 
+    {
+        
+    }
+    public void mousePressed(MouseEvent arg0) 
+    {
+        
+    }
+    public void mouseReleased(MouseEvent arg0) 
+    {
+        
+    }
+    
+    //Keyboard Events
+    public void keyPressed(KeyEvent arg0) 
+    {
+        
+    }
+    public void keyReleased(KeyEvent arg0) 
+    {
+        
+    }
+    public void keyTyped(KeyEvent arg0) 
+    {
+        
+    }
+}

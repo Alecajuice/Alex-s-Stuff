@@ -1,0 +1,34 @@
+package components.tiles;
+
+import javax.swing.*;
+
+public class TileToolTip extends JToolTip;
+{
+	private JLabel m_label;
+    private JButton m_button;
+    private JPanel m_panel;
+    
+    public CustomTooltip() {
+        super();
+        m_label = new JLabel();
+        m_button = new JButton("See, I am a button!");
+        m_panel = new JPanel(new BorderLayout());
+        m_panel.add(BorderLayout.CENTER, m_label);
+        m_panel.add(BorderLayout.SOUTH, m_button);
+        setLayout(new BorderLayout());
+        add(m_panel);
+    }
+
+    @Override public Dimension getPreferredSize() {
+        return m_panel.getPreferredSize();
+    }
+
+    @Override public void setTipText(String tipText) {
+        if (tipText != null && !tipText.isEmpty()) {
+            m_label.setText(tipText);
+        } else {
+            super.setTipText(tipText);
+        }
+    }
+}
+}

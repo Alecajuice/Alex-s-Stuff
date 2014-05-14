@@ -1,0 +1,11 @@
+INDEX VERSION 1.126+/Users/Milanchen/Desktop/Alex's Stuff/Programming/Java/.metadata/.plugins/org.eclipse.jdt.core
+1290428461.index
+2454220914.index
+2686315989.index
+4124992361.index
+1709610933.index
+763414176.index
+783021359.index
+3295305043.index
+2412289520.index
+3401051522.index

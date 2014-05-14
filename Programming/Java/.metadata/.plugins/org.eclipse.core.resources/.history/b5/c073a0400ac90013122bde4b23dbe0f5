@@ -1,0 +1,16 @@
+package components.tiles;
+
+import java.awt.Point;
+import java.io.IOException;
+
+public class Water extends Tile
+{
+
+	public Water(Point position, int feature, int building, int resource) throws IOException
+	{
+		super(position, building, resource, feature);
+		setTileImage(1);
+	}
+	
+	
+}

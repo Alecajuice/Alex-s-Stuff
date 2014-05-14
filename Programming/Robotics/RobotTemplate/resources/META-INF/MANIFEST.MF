@@ -1,0 +1,6 @@
+MIDlet-Name: ROBOT-CLASS-NAME
+MIDlet-Version: 1.0.0
+MIDlet-Vendor: FIRST
+MIDlet-1: ROBOT-CLASS-NAME, , ROBOT-PACKAGE.ROBOT-CLASS-NAME
+MicroEdition-Profile: IMP-1.0
+MicroEdition-Configuration: CLDC-1.1

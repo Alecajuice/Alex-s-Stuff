@@ -1,0 +1,34 @@
+package components.tiles;
+
+import java.awt.Graphics;
+import java.awt.Point;
+import java.io.IOException;
+
+import components.tiles.resources.*;
+import components.tiles.tileBuildings.*;
+import components.tiles.features.*;
+
+public class Plains extends Tile
+{
+
+	public Plains(Point position, Feature feature, TileBuilding building, Resource resource) throws IOException
+	{
+		super(position, feature, building, resource);
+		setTileImage(Tile.TILE_PLAINS);
+	}
+	
+	public int getID()
+	{
+		return Tile.TILE_PLAINS;
+	}
+
+//	public void draw(Graphics screen)
+//	{
+//		screen.drawImage(getTileImage(), (int)(getPosition().getX()*(modWidth + 1)), (int)(getPosition().getY()*(modHeight + 1)), modWidth, modHeight, this);
+//	}
+	
+	public String getTileName()
+	{
+		return "Plains";
+	}
+}

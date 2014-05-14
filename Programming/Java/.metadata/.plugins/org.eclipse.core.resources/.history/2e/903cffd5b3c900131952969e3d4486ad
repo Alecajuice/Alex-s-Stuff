@@ -1,0 +1,8 @@
+package components.tiles;
+
+import javax.swing.JButton;
+
+public class TileButton extends JButton
+{
+
+}

@@ -1,0 +1,224 @@
+package components.tiles;
+
+import gui.*;
+
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.RasterFormatException;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JToolTip;
+import javax.swing.PopupFactory;
+
+import components.tiles.resources.*;
+import components.tiles.tileBuildings.*;
+import components.tiles.features.*;
+
+public abstract class Tile extends JLabel implements ImageObserver, MouseListener
+{
+	//Spritesheet constants
+	private final static int X_OFFSET = 50;
+	private final static int Y_OFFSET = 50;
+	private final static int WIDTH = 200;
+	private final static int HEIGHT = 200;
+	private static BufferedImage TILESHEET;
+	
+	//Tile type constants
+	public final static int TILE_WATER = 1;
+	public final static int TILE_DESERT = 2;
+	public final static int TILE_PLAINS = 3;
+	public final static int TILE_TUNDRA = 4;
+	public final static int TILE_ROCK = 5;
+	
+	//Camera adjustments
+	public static int modWidth = (int)Math.round(WIDTH * Main.player1.getCamera().getZoomRatio());
+	public static int modHeight = (int)Math.round(HEIGHT * Main.player1.getCamera().getZoomRatio());
+	
+	private BufferedImage tileImage;
+	private TileToolTip toolTip;
+	//Constructor instance variables
+	private Point position;
+	private TileBuilding building;
+	private Resource resource;
+	private Feature feature;
+	
+	//Tile constructor
+	public Tile(Point position, Feature feature, TileBuilding building, Resource resource, BufferedImage tileImage) throws IOException
+	{
+		super(new ImageIcon(tileImage.getScaledInstance(modWidth, modHeight, Image.SCALE_SMOOTH)));
+//		super();
+		this.building = building;
+		this.position = position;
+		this.resource = resource;
+		this.feature = feature;
+		this.setOpaque(false);
+//		this.setContentAreaFilled(false);
+//		this.setBorderPainted(false);
+//		this.setFocusPainted(false);
+		this.setPreferredSize(new Dimension(modWidth, modHeight));
+		this.setMinimumSize(new Dimension(modWidth, modHeight));
+		this.setMaximumSize(new Dimension(modWidth, modHeight));
+		PopupFactory.setSharedInstance(new TranslucentPopupFactory());
+//		JLabel label = new JLabel("", new ImageIcon(tileImage.getScaledInstance(modWidth, modHeight, Image.SCALE_SMOOTH)), JLabel.CENTER);
+//		JLabel label = new JLabel("hi");
+//		label.setPreferredSize(new Dimension(modWidth, modHeight));
+//		label.setMinimumSize(new Dimension(modWidth, modHeight));
+//		label.setMaximumSize(new Dimension(modWidth, modHeight));
+//		label.setOpaque(false);
+		toolTip = new TileToolTip();
+//		toolTip.setComponent(label);
+//		label.setToolTipText(this.getTileName());
+//		this.add(label);
+		toolTip.setComponent(this);
+		this.setToolTipText(this.getTileName());
+//		FontMetrics f = this.getFontMetrics(this.getFont());
+//		this.setToolTipText("<html>"
+//							+ "<div style='border-color:#000000;border-radius:2px;background-color:#00006B;color:#FFFFFF;text-align:center;width:" + (f.stringWidth(this.getTileName()) + 4) + ";height:10px;'>"
+//								+ this.getTileName()
+//							+ "</div>"
+//							+ "</html>");
+		this.addMouseListener(this);
+	}
+
+	public JToolTip createToolTip()
+	{
+		return toolTip;
+	}
+	
+	public static void getTileSheet() throws IOException
+	{
+		TILESHEET = ImageIO.read(new File("img/Tiles.png"));
+	}
+	
+	public static BufferedImage getTileSelector() throws IOException
+	{
+		return ImageIO.read(new File("img/TileSelector.png")).getSubimage(X_OFFSET, Y_OFFSET, WIDTH, HEIGHT);
+	}
+	
+	public final void setTileImage(int iD)
+	{
+		try {
+			tileImage = TILESHEET.getSubimage(X_OFFSET*(iD) + WIDTH*(iD - 1), Y_OFFSET, WIDTH, HEIGHT);
+		} catch (RasterFormatException e) {
+			System.out.println(iD);
+		}
+	}
+	
+	public final static BufferedImage getTileImage(int iD)
+	{
+		try {
+			return TILESHEET.getSubimage(X_OFFSET*(iD) + WIDTH*(iD - 1), Y_OFFSET, WIDTH, HEIGHT);
+		} catch (RasterFormatException e) {
+			System.out.println(iD);
+			return null;
+		}
+	}
+	
+	public BufferedImage getTileImage()
+	{
+		return tileImage;
+	}
+	
+	//Draw tiles
+	public abstract void draw(Graphics screen);
+//		screen.setColor(new Color(0, 130 + 20*ID, 255 - 30*ID));
+//		screen.drawImage(tileImage, (int)(position.getX()*(modWidth + 1)), (int)(position.getY()*(modHeight + 1)), modWidth, modHeight, this);
+//		screen.fillRect(position.getX()*modWidth, position.getY()*modHeight, modWidth, modHeight);
+
+	public void mouseClicked(MouseEvent e)
+	{
+	}
+
+	public void mouseEntered(MouseEvent e)
+	{
+		BufferedImage tileImg = this.tileImage;
+		Graphics2D tileCanvas = tileImg.createGraphics();
+		try {
+			tileCanvas.drawImage(getTileSelector(), 0, 0, this);
+		} catch (IOException e1) {
+		}
+		this.setIcon(new ImageIcon(tileImg.getScaledInstance(modWidth, modHeight, Image.SCALE_SMOOTH)));
+		this.repaint();
+	}
+
+	public void mouseExited(MouseEvent e)
+	{
+		this.setIcon(new ImageIcon(getTileImage(this.getID()).getScaledInstance(modWidth, modHeight, Image.SCALE_SMOOTH)));
+		this.repaint();
+	}
+
+	public void mousePressed(MouseEvent e)
+	{
+		System.out.println(this.getTileName());
+		BufferedImage pressedImage = new BufferedImage(modWidth, modHeight, BufferedImage.TYPE_INT_ARGB);  
+		Graphics2D g2d = pressedImage.createGraphics();  
+		// do your painting on g2d  
+		g2d.dispose();  
+		// newImage is now ready for use
+	}
+
+	public void mouseReleased(MouseEvent e)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	//Getters and setters
+	public TileBuilding getBuilding() 
+	{
+		return building;
+	}
+	public void setBuilding(TileBuilding building) 
+	{
+		this.building = building;
+	}	
+	public Point getPosition()
+	{
+		return position;
+	}
+	//Update Image
+	public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5) 
+	{
+		return false;
+	}
+	public int getWIDTH() 
+	{
+		return WIDTH;
+	}
+	public int getHEIGHT() 
+	{
+		return HEIGHT;
+	}
+
+	public Resource getResource() 
+	{
+		return resource;
+	}
+
+	public void setResource(Resource resource) 
+	{
+		this.resource = resource;
+	}
+	public Feature getFeature() 
+	{
+		return feature;
+	}
+	public void setFeature(Feature feature) 
+	{
+		this.feature = feature;
+	}
+	public abstract int getID();
+	public abstract String getTileName();
+}

@@ -1,0 +1,52 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class PanelOpaqueTest {
+  public JComponent makeUI() {
+    JPanel p1 = createPanel();
+    p1.setBorder(BorderFactory.createTitledBorder("JPanel#setOpaque(false)"));
+    p1.setOpaque(false);
+    p1.add(createButton());
+
+    JPanel p2 = createPanel();
+    p2.setBorder(BorderFactory.createTitledBorder("JPanel#setOpaque(true)"));
+    p2.setOpaque(true);
+    p2.add(createButton());
+
+    JPanel p = new JPanel(new GridLayout(2,1));
+    p.add(p1);
+    p.add(p2);
+    return p;
+  }
+  protected JButton createButton() {
+    JButton b = new JButton("button");
+    b.setContentAreaFilled(false);
+    b.setFocusPainted(false);
+    //b.setBorderPainted(false);
+    //b.setOpaque(false);
+    return b;
+  }
+  protected JPanel createPanel() {
+    return new JPanel() {
+      @Override public void paintComponent(Graphics g) {
+        g.setColor(new Color(100,100,100,100));
+        g.fillRect(0,0,getWidth(),getHeight());
+      }
+    };
+  }
+  public static void main(String[] args) {
+    EventQueue.invokeLater(new Runnable() {
+      @Override public void run() {
+        createAndShowGUI();
+      }
+    });
+  }
+  public static void createAndShowGUI() {
+    JFrame f = new JFrame();
+    f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    f.getContentPane().add(new PanelOpaqueTest().makeUI());
+    f.setSize(320, 240);
+    f.setLocationRelativeTo(null);
+    f.setVisible(true);
+  }
+}
